@@ -5,7 +5,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './models/users/users.module';
-import { model } from 'mongoose';
 import { RolesModule } from './models/roles/roles.module';
 import { PermissionsModule } from './models/permissions/permissions.module';
 
@@ -23,7 +22,7 @@ const modelModule = [AuthModule, UsersModule, RolesModule, PermissionsModule];
       }),
       inject: [ConfigService],
     }),
-    ...modelModule
+    ...modelModule,
   ],
   controllers: [AppController],
   providers: [AppService],

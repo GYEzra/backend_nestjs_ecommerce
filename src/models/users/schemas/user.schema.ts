@@ -10,10 +10,10 @@ export class User {
   email: string;
 
   @Prop({ required: true })
-  password: number;
+  password: string;
 
   @Prop({ required: true })
-  fulname: string;
+  fullname: string;
 
   @Prop()
   age: number;
@@ -24,7 +24,10 @@ export class User {
   @Prop()
   gender: string;
 
-  @Prop({ required: true, ref: Role.name })
+  @Prop()
+  refresh_token: string;
+
+  @Prop({ ref: Role.name })
   role: mongoose.Schema.Types.ObjectId;
 
   @Prop({ type: Object })

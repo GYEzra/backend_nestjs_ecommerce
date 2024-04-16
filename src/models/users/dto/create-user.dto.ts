@@ -52,7 +52,7 @@ export class CreateUserDto {
   @IsEnum(GenderType, { message: 'Vui lòng nhập đúng định dạng giới tính' })
   gender: GenderType;
 
-  @IsNotEmpty({ message: 'Vai trò không được bỏ trống' })
+  @IsOptional()
   @IsMongoId({ message: 'Vui lòng  nhập đúng định dạng của vai trò' })
-  role: mongoose.Schema.Types.ObjectId;
+  role: string;
 }
