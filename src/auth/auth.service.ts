@@ -41,8 +41,9 @@ export class AuthService {
   async login(user: any, response: Response): Promise<any> {
     const { _id, email, fullname, age, address, gender, role } = user;
     const payload = {
-      sub: _id,
+      sub: 'refresh token',
       iss: 'from server',
+      _id,
       email,
       fullname,
       age,

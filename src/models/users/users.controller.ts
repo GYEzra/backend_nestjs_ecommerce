@@ -6,10 +6,15 @@ import {
   Patch,
   Param,
   Delete,
+  Res,
+  Query,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { query } from 'express';
+import { User } from 'src/common/decorators/user.decorator';
+import { IUser } from 'src/common/interfaces/user.interface';
 
 @Controller('users')
 export class UsersController {
@@ -21,8 +26,8 @@ export class UsersController {
   }
 
   @Get()
-  findAll() {
-    return this.usersService.findAll();
+  async findAll(@Query() query: string) {
+    return await this.usersService.findAll(query);
   }
 
   @Get(':id')
@@ -30,13 +35,13 @@ export class UsersController {
     return this.usersService.findOne(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(+id, updateUserDto);
+  @Patch()
+  async update(@User() user: IUser, @Body() updateUserDto: UpdateUserDto) {
+    return await this.usersService.update(user, updateUserDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.usersService.remove(+id);
+  remove(@User() user: IUser, @Param('id') id: string) {
+    return this.usersService.remove(user, id);
   }
 }

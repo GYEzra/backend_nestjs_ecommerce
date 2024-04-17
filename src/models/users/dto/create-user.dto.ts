@@ -17,7 +17,7 @@ export class CreateUserDto {
   email: string;
 
   @IsNotEmpty({ message: 'Mật khẩu không được bỏ trống' })
-  @IsString({ message: 'Vui lòng nhập đúng định dạng mật khẩu' })
+  @IsString({ message: 'Mật khẩu phải là kiểu String' })
   @IsStrongPassword(
     {
       minLength: 8,
@@ -34,25 +34,25 @@ export class CreateUserDto {
   password: string;
 
   @IsNotEmpty({ message: 'Tên người dùng không được bỏ trống' })
-  @IsString({ message: 'Vui lòng nhập đúng định dạng tên người dùng' })
+  @IsString({ message: 'Tên người dùng phải là kiểu String' })
   fullname: string;
 
   @IsOptional()
   @IsNumber(
     { maxDecimalPlaces: 0, allowInfinity: false },
-    { message: 'Vui lòng nhập đúng định dạng của tuổi' },
+    { message: 'Tuổi phải là kiểu số nguyên' },
   )
   age: number;
 
   @IsOptional()
-  @IsString({ message: 'Vui lòng nhập đúng định dạng' })
+  @IsString({ message: 'Địa chỉ phải là kiểu String' })
   address: string;
 
   @IsOptional()
-  @IsEnum(GenderType, { message: 'Vui lòng nhập đúng định dạng giới tính' })
+  @IsEnum(GenderType, { message: 'Giới tính phải là kiểu Nam hoặc Nữ' })
   gender: GenderType;
 
   @IsOptional()
-  @IsMongoId({ message: 'Vui lòng  nhập đúng định dạng của vai trò' })
+  @IsMongoId({ message: 'Role phải là kiểu MongoId' })
   role: string;
 }

@@ -1,7 +1,7 @@
 import { ExecutionContext, UnauthorizedException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
-import { Messages } from 'src/common/enums/messages';
+import { MESSAGES } from 'src/common/enums/messages';
 import { IS_PUBLIC_KEY } from '../auth.decorator';
 
 export class JwtAuthGuard extends AuthGuard('jwt') {
@@ -22,7 +22,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
   handleRequest(err, user, info) {
     // You can throw an exception based on either "info" or "err" arguments
     if (err || !user) {
-      throw err || new UnauthorizedException(Messages.Unauthorized);
+      throw err || new UnauthorizedException(MESSAGES.UNAUTHORIZED);
     }
     return user;
   }

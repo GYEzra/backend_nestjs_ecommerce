@@ -1,10 +1,11 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument } from 'mongoose';
+import { softDeletePlugin } from 'soft-delete-plugin-mongoose';
 import { Role } from 'src/models/roles/schemas/role.schema';
 
 export type UserDocument = HydratedDocument<User>;
 
-@Schema()
+@Schema({ timestamps: true })
 export class User {
   @Prop({ required: true })
   email: string;
