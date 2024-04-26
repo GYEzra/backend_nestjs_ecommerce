@@ -1,4 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { ApiProperty } from '@nestjs/swagger';
 import mongoose, { HydratedDocument } from 'mongoose';
 import { softDeletePlugin } from 'soft-delete-plugin-mongoose';
 import { Role } from 'src/models/roles/schemas/role.schema';
@@ -8,8 +9,13 @@ export type UserDocument = HydratedDocument<User>;
 @Schema({ timestamps: true })
 export class User {
   @Prop({ required: true })
+  @ApiProperty({
+    example: 'example@gmail.com',
+    description: 'Nhập email của bạn',
+  })
   email: string;
 
+  @ApiProperty({ example: 'example123@', description: 'Nhập password của bạn' })
   @Prop({ required: true })
   password: string;
 

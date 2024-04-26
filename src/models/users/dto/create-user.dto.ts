@@ -8,7 +8,6 @@ import {
   IsString,
   IsStrongPassword,
 } from 'class-validator';
-import mongoose from 'mongoose';
 import { GenderType } from 'src/common/enums/genderType';
 
 export class CreateUserDto {
