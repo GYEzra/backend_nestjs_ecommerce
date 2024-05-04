@@ -85,12 +85,9 @@ export class RolesService {
     });
   }
 
-  async update(id: string, updateRoleDto: UpdateRoleDto, user: IUser) {
-    if (!mongoose.isValidObjectId(id))
-      throw new NotFoundException(`ID #${id} không tồn tại`);
-
+  async update(updateRoleDto: UpdateRoleDto, user: IUser) {
     return await this.roleModel.updateOne(
-      { _id: id },
+      { _id: updateRoleDto._id },
       {
         ...updateRoleDto,
         updatedBy: {

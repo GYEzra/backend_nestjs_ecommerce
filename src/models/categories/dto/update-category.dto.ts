@@ -1,8 +1,8 @@
 import { PartialType } from '@nestjs/mapped-types';
-import { CreateRoleDto } from './create-role.dto';
+import { CreateCategoryDto } from './create-category.dto';
 import { IsMongoId, IsNotEmpty } from 'class-validator';
 
-export class UpdateRoleDto extends PartialType(CreateRoleDto) {
+export class UpdateCategoryDto extends PartialType(CreateCategoryDto) {
   @IsNotEmpty({ message: 'ID của người dùng không được bỏ trống' })
   @IsMongoId({ message: 'ID của người dùng phải là kiểu MongoId' })
   _id: string;

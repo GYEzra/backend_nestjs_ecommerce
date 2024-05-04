@@ -8,8 +8,15 @@ import { UsersModule } from './models/users/users.module';
 import { RolesModule } from './models/roles/roles.module';
 import { PermissionsModule } from './models/permissions/permissions.module';
 import { softDeletePlugin } from 'soft-delete-plugin-mongoose';
+import { CategoriesModule } from './models/categories/categories.module';
 
-const modelModule = [AuthModule, UsersModule, RolesModule, PermissionsModule];
+const modelModule = [
+  AuthModule,
+  UsersModule,
+  RolesModule,
+  PermissionsModule,
+  CategoriesModule,
+];
 
 @Module({
   imports: [
@@ -20,7 +27,7 @@ const modelModule = [AuthModule, UsersModule, RolesModule, PermissionsModule];
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
         uri: configService.get<string>('MONGODB_URI'),
-        connectionFactory: (connection) => {
+        connectionFactory: connection => {
           connection.plugin(softDeletePlugin);
           return connection;
         },

@@ -39,12 +39,8 @@ export class RolesController {
 
   @ResponseMessage('Cập nhật thông tin của một vai trò')
   @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateRoleDto: UpdateRoleDto,
-    @User() user: IUser,
-  ) {
-    return this.rolesService.update(id, updateRoleDto, user);
+  update(@Body() updateRoleDto: UpdateRoleDto, @User() user: IUser) {
+    return this.rolesService.update(updateRoleDto, user);
   }
 
   @ResponseMessage('Xóa một vai trò')
