@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import * as bcrypt from 'bcrypt';
@@ -10,6 +14,7 @@ import { RolesService } from '../roles/roles.service';
 import aqp from 'api-query-params';
 import { IUser } from 'src/common/interfaces/user.interface';
 import { isMongoId } from 'class-validator';
+import mongoose from 'mongoose';
 
 @Injectable()
 export class UsersService {
@@ -68,7 +73,8 @@ export class UsersService {
   }
 
   async findOne(id: string) {
-    return await this.userModel.findById(id);
+    if (mongoose.isValidObjectId(id)) return await this.userModel.findById(id);
+    throw new NotFoundException(`ID #${id} không tồn tại`);
   }
 
   async findUserByEmail(email: string) {

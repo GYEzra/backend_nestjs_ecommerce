@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import {
   IsEmail,
   IsEnum,
@@ -11,6 +12,10 @@ import {
 import { GenderType } from 'src/common/enums/genderType';
 
 export class CreateUserDto {
+  @ApiProperty({
+    example: 'example@gmail.com',
+    description: 'Nhập email của bạn',
+  })
   @IsEmail({}, { message: 'Vui lòng nhập đúng định email' })
   @IsNotEmpty({ message: 'Email không được bỏ trống' })
   email: string;

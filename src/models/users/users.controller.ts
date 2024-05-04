@@ -6,13 +6,11 @@ import {
   Patch,
   Param,
   Delete,
-  Res,
   Query,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { query } from 'express';
 import { User } from 'src/common/decorators/user.decorator';
 import { IUser } from 'src/common/interfaces/user.interface';
 
