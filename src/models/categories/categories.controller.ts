@@ -1,12 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
@@ -21,10 +13,7 @@ export class CategoriesController {
 
   @ResponseMessage('Tạo mới danh mục')
   @Post()
-  async create(
-    @Body() createCategoryDto: CreateCategoryDto,
-    @User() user: IUser,
-  ) {
+  async create(@Body() createCategoryDto: CreateCategoryDto, @User() user: IUser) {
     return await this.categoriesService.create(createCategoryDto, user);
   }
 
@@ -42,12 +31,13 @@ export class CategoriesController {
   }
 
   @ResponseMessage('Cập nhật thông tin danh mục')
-  @Patch()
+  @Patch('_id')
   async update(
+    @Param('_id') _id: string,
     @Body() updateCategoryDto: UpdateCategoryDto,
     @User() user: IUser,
   ) {
-    return await this.categoriesService.update(updateCategoryDto, user);
+    return await this.categoriesService.update(_id, updateCategoryDto, user);
   }
 
   @ResponseMessage('Xóa danh mục')

@@ -1,8 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { InjectModel } from '@nestjs/mongoose';
@@ -10,6 +6,7 @@ import { Category, CategoryDocument } from './schemas/category.schema';
 import { SoftDeleteModel } from 'soft-delete-plugin-mongoose';
 import { IUser } from 'src/common/interfaces/user.interface';
 import mongoose from 'mongoose';
+import { CUSTOM_MESSAGES } from 'src/common/enums/enums';
 
 @Injectable()
 export class CategoriesService {
@@ -42,9 +39,12 @@ export class CategoriesService {
     return await this.categoryModel.findOne({ _id: id });
   }
 
-  async update(updateCategoryDto: UpdateCategoryDto, user: IUser) {
+  async update(_id: string, updateCategoryDto: UpdateCategoryDto, user: IUser) {
+    if (!mongoose.Types.ObjectId.isValid(_id))
+      throw new BadRequestException(CUSTOM_MESSAGES.ERROR_MONGO_ID);
+
     return await this.categoryModel.updateOne(
-      { _id: updateCategoryDto._id },
+      { _id },
       {
         name: updateCategoryDto.name,
         updatedBy: {
@@ -55,12 +55,12 @@ export class CategoriesService {
     );
   }
 
-  async remove(id: string, user: IUser) {
-    if (!mongoose.isValidObjectId(id))
-      throw new NotFoundException(`ID #${id} không tồn tại`);
+  async remove(_id: string, user: IUser) {
+    if (!mongoose.Types.ObjectId.isValid(_id))
+      throw new BadRequestException(CUSTOM_MESSAGES.ERROR_MONGO_ID);
 
     await this.categoryModel.updateOne(
-      { _id: id },
+      { _id },
       {
         deletedBy: {
           _id: user._id,
@@ -68,6 +68,6 @@ export class CategoriesService {
         },
       },
     );
-    return this.categoryModel.softDelete({ _id: id });
+    return this.categoryModel.softDelete({ _id });
   }
 }

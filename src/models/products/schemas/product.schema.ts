@@ -16,7 +16,7 @@ export class Product {
   @Prop([String])
   images: string[];
 
-  @Prop({ required: true })
+  @Prop()
   category: mongoose.Schema.Types.ObjectId;
 
   @Prop()

@@ -9,7 +9,7 @@ import {
   IsString,
   IsStrongPassword,
 } from 'class-validator';
-import { GenderType } from 'src/common/enums/genderType';
+import { GenderType } from 'src/common/enums/enums';
 
 export class CreateUserDto {
   @ApiProperty({

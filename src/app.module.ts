@@ -9,6 +9,9 @@ import { RolesModule } from './models/roles/roles.module';
 import { PermissionsModule } from './models/permissions/permissions.module';
 import { softDeletePlugin } from 'soft-delete-plugin-mongoose';
 import { CategoriesModule } from './models/categories/categories.module';
+import { ProductsModule } from './models/products/products.module';
+import { VariantsModule } from './models/variants/variants.module';
+import { ReviewsModule } from './models/reviews/reviews.module';
 
 const modelModule = [
   AuthModule,
@@ -16,6 +19,9 @@ const modelModule = [
   RolesModule,
   PermissionsModule,
   CategoriesModule,
+  ProductsModule,
+  VariantsModule,
+  ReviewsModule,
 ];
 
 @Module({

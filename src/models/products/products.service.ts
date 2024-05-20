@@ -1,26 +1,98 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { IUser } from 'src/common/interfaces/user.interface';
+import { Product, ProductDocument } from './schemas/product.schema';
+import { SoftDeleteModel } from 'soft-delete-plugin-mongoose';
+import { InjectModel } from '@nestjs/mongoose';
+import aqp from 'api-query-params';
+import { ReviewsService } from '../reviews/reviews.service';
+import mongoose from 'mongoose';
+import { CUSTOM_MESSAGES } from 'src/common/enums/enums';
 
 @Injectable()
 export class ProductsService {
-  create(createProductDto: CreateProductDto) {
-    return 'This action adds a new product';
+  constructor(
+    @InjectModel(Product.name) private productModel: SoftDeleteModel<ProductDocument>,
+    private reviewsService: ReviewsService,
+  ) {}
+
+  async create(createProductDto: CreateProductDto, user: IUser): Promise<Product> {
+    return await this.productModel.create({
+      ...createProductDto,
+      createdBy: {
+        _id: user._id,
+        email: user.email,
+      },
+    });
   }
 
-  findAll() {
-    return `This action returns all products`;
+  async findAll(query: string) {
+    const { filter, sort, population } = aqp(query);
+    const current = +filter.current;
+    const pageSize = +filter.pageSize;
+    delete filter.current;
+    delete filter.pageSize;
+
+    let offset = (current - 1) * pageSize;
+    let limit = pageSize ? pageSize : 10;
+
+    const totalItems = (await this.productModel.find(filter)).length;
+    const totalPages = Math.ceil(totalItems / limit);
+    const defaultSort = sort ? (sort as unknown as string) : '-updatedAt';
+
+    const result = await this.productModel
+      .find(filter)
+      .select('-password')
+      .skip(offset)
+      .limit(limit)
+      .sort(defaultSort)
+      .populate(population);
+
+    return {
+      meta: {
+        current: current,
+        pageSize: pageSize,
+        pages: totalPages,
+        total: totalItems,
+      },
+      result,
+    };
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} product`;
+  async findOne(_id: string) {
+    const product = await this.productModel.findById(_id).exec();
+    const avg_rating = await this.reviewsService.getAvgRating(product._id as unknown as string);
+
+    return {
+      ...product.toObject(),
+      avg_rating,
+    };
   }
 
-  update(id: number, updateProductDto: UpdateProductDto) {
-    return `This action updates a #${id} product`;
+  async update(_id: string, updateProductDto: UpdateProductDto, user: IUser) {
+    return await this.productModel.updateOne(
+      { _id },
+      {
+        ...updateProductDto,
+        updatedBy: {
+          _id: user._id,
+          email: user.email,
+        },
+      },
+    );
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} product`;
+  async remove(_id: string, user: IUser) {
+    await this.productModel.updateOne(
+      { _id },
+      {
+        deletedBy: {
+          _id: user._id,
+          email: user.email,
+        },
+      },
+    );
+    return await this.productModel.softDelete({ _id });
   }
 }

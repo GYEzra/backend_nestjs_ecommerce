@@ -1,8 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
 import { InjectModel } from '@nestjs/mongoose';
@@ -11,21 +7,18 @@ import { SoftDeleteModel } from 'soft-delete-plugin-mongoose';
 import { IUser } from 'src/common/interfaces/user.interface';
 import aqp from 'api-query-params';
 import mongoose from 'mongoose';
-import { RoleType } from 'src/common/enums/roleType';
+import { RoleType } from 'src/common/enums/enums';
 
 @Injectable()
 export class RolesService {
-  constructor(
-    @InjectModel(Role.name) private roleModel: SoftDeleteModel<RoleDocument>,
-  ) {}
+  constructor(@InjectModel(Role.name) private roleModel: SoftDeleteModel<RoleDocument>) {}
 
   async create(createRoleDto: CreateRoleDto, user: IUser) {
     const checkRole = await this.roleModel.findOne({
       name: createRoleDto.name,
     });
 
-    if (checkRole)
-      throw new BadRequestException(`Role ${createRoleDto.name} đã tồn tại!`);
+    if (checkRole) throw new BadRequestException(`Role ${createRoleDto.name} đã tồn tại!`);
 
     let role = await this.roleModel.create({
       ...createRoleDto,
@@ -76,18 +69,15 @@ export class RolesService {
   }
 
   async findOne(id: string) {
-    if (!mongoose.isValidObjectId(id))
-      throw new NotFoundException(`ID #${id} không tồn tại`);
-
     return (await this.roleModel.findOne({ _id: id }))?.populate({
       path: 'permissions',
       select: { _id: 1, apiPath: 1, name: 1, method: 1, module: 1 },
     });
   }
 
-  async update(updateRoleDto: UpdateRoleDto, user: IUser) {
+  async update(_id: string, updateRoleDto: UpdateRoleDto, user: IUser) {
     return await this.roleModel.updateOne(
-      { _id: updateRoleDto._id },
+      { _id },
       {
         ...updateRoleDto,
         updatedBy: {
@@ -99,12 +89,9 @@ export class RolesService {
   }
 
   async remove(id: string, user: IUser) {
-    if (!mongoose.isValidObjectId(id))
-      throw new NotFoundException(`ID #${id} không tồn tại`);
-
     const role = await this.roleModel.findOne({ _id: id });
 
-    if (role && role.name === RoleType.Admin)
+    if (role && role.name === RoleType.ADMIN)
       throw new BadRequestException('Bạn không được phép xóa Role ADMIN');
 
     await this.roleModel.updateOne(

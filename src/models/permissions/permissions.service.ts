@@ -1,8 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreatePermissionDto } from './dto/create-permission.dto';
 import { UpdatePermissionDto } from './dto/update-permission.dto';
 import { InjectModel } from '@nestjs/mongoose';
@@ -76,8 +72,7 @@ export class PermissionsService {
   }
 
   async findOne(id: string) {
-    if (mongoose.isValidObjectId(id))
-      return await this.permissionModel.findOne({ _id: id });
+    if (mongoose.isValidObjectId(id)) return await this.permissionModel.findOne({ _id: id });
     throw new NotFoundException(`ID #${id} không tồn tại`);
   }
 
@@ -95,8 +90,7 @@ export class PermissionsService {
   }
 
   async remove(id: string, user: IUser) {
-    if (!mongoose.isValidObjectId(id))
-      throw new NotFoundException(`ID #${id} không tồn tại`);
+    if (!mongoose.isValidObjectId(id)) throw new NotFoundException(`ID #${id} không tồn tại`);
 
     await this.permissionModel.updateOne(
       { _id: id },
