@@ -25,17 +25,11 @@ export class Product {
   @Prop()
   gender: string;
 
-  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: Variant.name }] })
-  variants: Variant[];
-
   @Prop()
   fabric: string;
 
   @Prop()
   care_instructions: string;
-
-  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: Review.name }] })
-  reviews: Review[];
 
   @Prop({ type: Object })
   createdBy: {
