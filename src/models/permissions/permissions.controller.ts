@@ -1,19 +1,11 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  Query,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { PermissionsService } from './permissions.service';
 import { CreatePermissionDto } from './dto/create-permission.dto';
 import { UpdatePermissionDto } from './dto/update-permission.dto';
 import { ResponseMessage } from 'src/common/decorators/response.decorator';
 import { IUser } from 'src/common/interfaces/user.interface';
 import { User } from 'src/common/decorators/user.decorator';
+import { ValidateObjectIdPipe } from 'src/common/pipes/validate_object_id.pipe';
 
 @Controller('permissions')
 export class PermissionsController {
@@ -21,10 +13,7 @@ export class PermissionsController {
 
   @ResponseMessage('Tạo mới một quyền')
   @Post()
-  async create(
-    @Body() createPermissionDto: CreatePermissionDto,
-    @User() user: IUser,
-  ) {
+  async create(@Body() createPermissionDto: CreatePermissionDto, @User() user: IUser) {
     return await this.permissionsService.create(createPermissionDto, user);
   }
 
@@ -36,22 +25,23 @@ export class PermissionsController {
 
   @ResponseMessage('Lấy thông tin của quyền')
   @Get(':id')
-  async findOne(@Param('id') id: string) {
+  async findOne(@Param('id', ValidateObjectIdPipe) id: string) {
     return await this.permissionsService.findOne(id);
   }
 
   @ResponseMessage('Cập nhật một quyền')
-  @Patch()
-  update(
+  @Patch(':id')
+  async update(
+    @Param('id', ValidateObjectIdPipe) _id: string,
     @Body() updatePermissionDto: UpdatePermissionDto,
     @User() user: IUser,
   ) {
-    return this.permissionsService.update(updatePermissionDto, user);
+    return await this.permissionsService.update(updatePermissionDto, user);
   }
 
   @ResponseMessage('Xóa một quyền')
   @Delete(':id')
-  remove(@Param('id') id: string, @User() user: IUser) {
-    return this.permissionsService.remove(id, user);
+  async remove(@Param('id', ValidateObjectIdPipe) id: string, @User() user: IUser) {
+    return await this.permissionsService.remove(id, user);
   }
 }

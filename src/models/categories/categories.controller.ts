@@ -6,6 +6,7 @@ import { User } from 'src/common/decorators/user.decorator';
 import { IUser } from 'src/common/interfaces/user.interface';
 import { ResponseMessage } from 'src/common/decorators/response.decorator';
 import { Public } from 'src/auth/auth.decorator';
+import { ValidateObjectIdPipe } from 'src/common/pipes/validate_object_id.pipe';
 
 @Controller('categories')
 export class CategoriesController {
@@ -26,14 +27,14 @@ export class CategoriesController {
 
   @ResponseMessage('Lấy thông tin của danh mục')
   @Get(':id')
-  async findOne(@Param('id') id: string) {
+  async findOne(@Param('id', ValidateObjectIdPipe) id: string) {
     return await this.categoriesService.findOne(id);
   }
 
   @ResponseMessage('Cập nhật thông tin danh mục')
-  @Patch('_id')
+  @Patch(':id')
   async update(
-    @Param('_id') _id: string,
+    @Param('id', ValidateObjectIdPipe) _id: string,
     @Body() updateCategoryDto: UpdateCategoryDto,
     @User() user: IUser,
   ) {
@@ -43,6 +44,6 @@ export class CategoriesController {
   @ResponseMessage('Xóa danh mục')
   @Delete(':id')
   async remove(@Param('id') id: string, @User() user: IUser) {
-    return this.categoriesService.remove(id, user);
+    return await this.categoriesService.remove(id, user);
   }
 }

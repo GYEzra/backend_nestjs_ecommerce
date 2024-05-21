@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreatePermissionDto } from './dto/create-permission.dto';
 import { UpdatePermissionDto } from './dto/update-permission.dto';
 import { InjectModel } from '@nestjs/mongoose';
@@ -6,7 +6,6 @@ import { Permission, PermissionDocument } from './schemas/permission.schema';
 import { SoftDeleteModel } from 'soft-delete-plugin-mongoose';
 import { IUser } from 'src/common/interfaces/user.interface';
 import aqp from 'api-query-params';
-import mongoose from 'mongoose';
 
 @Injectable()
 export class PermissionsService {
@@ -62,18 +61,17 @@ export class PermissionsService {
 
     return {
       meta: {
-        current: current, //trang hiện tại
-        pageSize: pageSize, //số lượng bản ghi đã lấy
-        pages: totalPages, //tổng số trang với điều kiện query
-        total: totalItems, // tổng số phần tử (số bản ghi)
+        current: current,
+        pageSize: pageSize,
+        pages: totalPages,
+        total: totalItems,
       },
-      result, //kết quả query
+      result,
     };
   }
 
-  async findOne(id: string) {
-    if (mongoose.isValidObjectId(id)) return await this.permissionModel.findOne({ _id: id });
-    throw new NotFoundException(`ID #${id} không tồn tại`);
+  async findOne(_id: string) {
+    return await this.permissionModel.findById(_id);
   }
 
   async update(updatePermissionDto: UpdatePermissionDto, user: IUser) {
@@ -90,8 +88,6 @@ export class PermissionsService {
   }
 
   async remove(id: string, user: IUser) {
-    if (!mongoose.isValidObjectId(id)) throw new NotFoundException(`ID #${id} không tồn tại`);
-
     await this.permissionModel.updateOne(
       { _id: id },
       {
@@ -102,6 +98,6 @@ export class PermissionsService {
       },
     );
 
-    return this.permissionModel.softDelete({ _id: id });
+    return await this.permissionModel.softDelete({ _id: id });
   }
 }

@@ -40,9 +40,6 @@ export class CategoriesService {
   }
 
   async update(_id: string, updateCategoryDto: UpdateCategoryDto, user: IUser) {
-    if (!mongoose.Types.ObjectId.isValid(_id))
-      throw new BadRequestException(CUSTOM_MESSAGES.ERROR_MONGO_ID);
-
     return await this.categoryModel.updateOne(
       { _id },
       {
@@ -56,9 +53,6 @@ export class CategoriesService {
   }
 
   async remove(_id: string, user: IUser) {
-    if (!mongoose.Types.ObjectId.isValid(_id))
-      throw new BadRequestException(CUSTOM_MESSAGES.ERROR_MONGO_ID);
-
     await this.categoryModel.updateOne(
       { _id },
       {
@@ -68,6 +62,6 @@ export class CategoriesService {
         },
       },
     );
-    return this.categoryModel.softDelete({ _id });
+    return await this.categoryModel.softDelete({ _id });
   }
 }
