@@ -51,7 +51,6 @@ export class RolesService {
 
     const result = await this.roleModel
       .find(filter)
-      .select('-password')
       .skip(offset)
       .limit(limit)
       .sort(defaultSort)
