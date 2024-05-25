@@ -1,4 +1,12 @@
-import { IsEnum, IsMongoId, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import {
+  IsArray,
+  IsEnum,
+  IsMongoId,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 import mongoose from 'mongoose';
 import { GenderType } from 'src/common/enums/enums';
 
@@ -8,12 +16,20 @@ export class CreateProductDto {
   name: string;
 
   @IsNotEmpty({ message: 'Giá bán không được trống' })
-  @IsNumber({ allowInfinity: false, allowNaN: false, maxDecimalPlaces: 0 }, { message: 'Giá bán không hợp lệ' })
+  @IsNumber(
+    { allowInfinity: false, allowNaN: false, maxDecimalPlaces: 0 },
+    { message: 'Giá bán không hợp lệ' },
+  )
   price: number;
 
   @IsOptional()
   @IsString({ message: 'Hình ảnh phải là kiểu String', each: true })
   images: string[];
+
+  @IsOptional()
+  @IsArray({ message: 'Các biến thể phải là kiểu Array' })
+  @IsMongoId({ each: true, message: 'Biến thể phải là kiểu MongoId' })
+  variants: mongoose.Schema.Types.ObjectId[];
 
   @IsOptional()
   @IsMongoId({ message: 'ID danh mục phải là kiểu MongoId' })
@@ -34,14 +50,4 @@ export class CreateProductDto {
   @IsOptional()
   @IsString({ message: 'Hướng dẫn bảo quản phải là kiểu String' })
   care_instructions: string;
-
-  createdBy: {
-    _id: mongoose.Schema.Types.ObjectId;
-    email: string;
-  };
-
-  updatedBy: {
-    _id: mongoose.Schema.Types.ObjectId;
-    email: string;
-  };
 }
