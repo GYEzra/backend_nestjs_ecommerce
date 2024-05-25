@@ -7,8 +7,6 @@ import { SoftDeleteModel } from 'soft-delete-plugin-mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import aqp from 'api-query-params';
 import { ReviewsService } from '../reviews/reviews.service';
-import mongoose from 'mongoose';
-import { CUSTOM_MESSAGES } from 'src/common/enums/enums';
 
 @Injectable()
 export class ProductsService {
@@ -43,7 +41,6 @@ export class ProductsService {
 
     const result = await this.productModel
       .find(filter)
-      .select('-password')
       .skip(offset)
       .limit(limit)
       .sort(defaultSort)
