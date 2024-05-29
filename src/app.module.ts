@@ -12,6 +12,7 @@ import { CategoriesModule } from './models/categories/categories.module';
 import { ProductsModule } from './models/products/products.module';
 import { VariantsModule } from './models/variants/variants.module';
 import { ReviewsModule } from './models/reviews/reviews.module';
+import { PromotionsModule } from './models/promotions/promotions.module';
 
 const modelModule = [
   AuthModule,
@@ -22,6 +23,7 @@ const modelModule = [
   ProductsModule,
   VariantsModule,
   ReviewsModule,
+  PromotionsModule,
 ];
 
 @Module({

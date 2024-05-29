@@ -13,3 +13,14 @@ export const enum RoleType {
   CUSTOMER = 'Khách hàng',
   ADMIN = 'Quản trị viên',
 }
+
+export enum CouponStatus {
+  ACTIVE = 'Hoạt động',
+  INACTIVE = 'Không hoạt động',
+  EXPIED = 'Hết hạn',
+}
+
+export enum DiscountType {
+  PERCENTAGE = 'Phần trăm',
+  FIXED_AMOUNT = 'Số tiền',
+}
