@@ -1,10 +1,11 @@
 import { IsMongoId, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 import { Variant, VariantSchema } from '../schemas/variant.schema';
+import mongoose from 'mongoose';
 
 export class CreateVariantDto {
   @IsNotEmpty({ message: 'ID product không được bỏ trống' })
   @IsMongoId({ message: 'ID product phải là kiểu MongoId' })
-  product: string;
+  product: mongoose.Schema.Types.ObjectId;
 
   @IsNotEmpty({ message: 'Sku không được bỏ trống' })
   sku: string;

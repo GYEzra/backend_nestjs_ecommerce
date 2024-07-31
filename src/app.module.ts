@@ -13,6 +13,9 @@ import { ProductsModule } from './models/products/products.module';
 import { VariantsModule } from './models/variants/variants.module';
 import { ReviewsModule } from './models/reviews/reviews.module';
 import { PromotionsModule } from './models/promotions/promotions.module';
+import { CartsModule } from './models/carts/carts.module';
+import { OrdersModule } from './models/orders/orders.module';
+import { AddressesModule } from './models/addresses/addresses.module';
 
 const modelModule = [
   AuthModule,
@@ -24,6 +27,9 @@ const modelModule = [
   VariantsModule,
   ReviewsModule,
   PromotionsModule,
+  AddressesModule,
+  OrdersModule,
+  CartsModule,
 ];
 
 @Module({

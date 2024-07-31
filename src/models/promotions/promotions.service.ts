@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreatePromotionDto } from './dto/create-promotion.dto';
 import { UpdatePromotionDto } from './dto/update-promotion.dto';
 import { IUser } from 'src/common/interfaces/user.interface';
@@ -6,6 +6,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Promotion, PromotionDocument } from './schemas/promotion.schema';
 import { SoftDeleteModel } from 'soft-delete-plugin-mongoose';
 import aqp from 'api-query-params';
+import { DiscountType } from 'src/common/enums/enums';
 
 @Injectable()
 export class PromotionsService {
@@ -83,5 +84,45 @@ export class PromotionsService {
       },
     );
     return await this.promotionModel.softDelete({ _id });
+  }
+
+  // async applyCoupon(
+  //   cartWithOrderSummary: CartWithOrderSummary,
+  //   coupon: string,
+  // ): Promise<CartWithOrderSummary> {
+  //   const promotion = await this.promotionModel.findOne({ coupon });
+  //   if (!promotion || !this.isValidPromotion(cartWithOrderSummary.orderSummary.total, promotion)) {
+  //     throw new BadRequestException('Mã khuyến mãi không hợp lệ hoặc không tồn tại');
+  //   }
+
+  //   const discountAmount = this.calculateDiscountAmount(
+  //     cartWithOrderSummary.orderSummary.total,
+  //     promotion,
+  //   );
+
+  //   return {
+  //     ...cartWithOrderSummary,
+  //     promotion,
+  //     orderSummary: {
+  //       ...cartWithOrderSummary.orderSummary,
+  //       couponDiscount: discountAmount,
+  //       total: cartWithOrderSummary.orderSummary.total - discountAmount,
+  //     },
+  //   };
+  // }
+
+  private isValidPromotion(totalAmount: number, promotion: Promotion): boolean {
+    const now = new Date();
+
+    if (now < promotion.start_date || now > promotion.end_date) return false;
+    if (promotion.condition && totalAmount < promotion.condition) return false;
+
+    return true;
+  }
+
+  calculateDiscountAmount(totalAmount: number, promotion: Promotion): number {
+    return promotion.discount_type === DiscountType.FIXED_AMOUNT
+      ? totalAmount - promotion.discount_amount
+      : totalAmount * (promotion.discount_amount / 100);
   }
 }

@@ -24,3 +24,31 @@ export enum DiscountType {
   PERCENTAGE = 'Phần trăm',
   FIXED_AMOUNT = 'Số tiền',
 }
+
+export enum PaymentMethod {
+  Cod = 'Thanh toán khi nhận hàng',
+  VNPay = 'Ví điện tử VNPay',
+  Momo = 'Ví điện tử Momo',
+}
+
+export enum PaymentStatus {
+  Pending = 'Đang chờ',
+  Paid = 'Đã thanh toán',
+  Failed = 'Thất bại',
+  Cancelled = 'Đã hủy',
+  Refunded = 'Đã hoàn tiền',
+}
+
+export enum ShippingMethod {
+  Standard = 'Giao hàng tiêu chuẩn',
+  Express = 'Giao hàng nhanh',
+  SameDay = 'Giao hàng hỏa tốc',
+}
+
+export enum OrderStatus {
+  Pending = 'Chờ xử ký',
+  Processing = 'Đang xử lý',
+  Shipped = 'Đã giao hàng',
+  Delivered = 'Giao hàng thành công',
+  Cancelled = 'Đã hủy',
+}

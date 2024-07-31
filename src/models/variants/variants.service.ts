@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateVariantDto } from './dto/create-variant.dto';
 import { UpdateVariantDto } from './dto/update-variant.dto';
 import { IUser } from 'src/common/interfaces/user.interface';
@@ -88,5 +88,14 @@ export class VariantsService {
     );
 
     return await this.variantModel.softDelete({ _id });
+  }
+
+  async checkStock(variantId: string, quantity: number): Promise<boolean> {
+    const variant = await this.variantModel.findById(variantId);
+    if (!variant) {
+      throw new NotFoundException('Biến thể này không tồn tại');
+    }
+
+    return variant.stock >= quantity;
   }
 }

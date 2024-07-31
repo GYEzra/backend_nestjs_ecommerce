@@ -1,12 +1,4 @@
-import {
-  Controller,
-  Post,
-  Body,
-  UseGuards,
-  Res,
-  Get,
-  Req,
-} from '@nestjs/common';
+import { Controller, Post, Body, UseGuards, Res, Get, Req } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterUserDto } from 'src/models/users/dto/register-user.dto';
 import { UsersService } from 'src/models/users/users.service';
@@ -29,6 +21,7 @@ export class AuthController {
   @Post('signup')
   @ResponseMessage('Thực hiện đăng ký tài khoản')
   async signUp(@Body() registerUserDto: RegisterUserDto) {
+    console.warn(registerUserDto);
     return await this.authService.signUp(registerUserDto);
   }
 
@@ -49,10 +42,7 @@ export class AuthController {
   @Public()
   @Get('refresh')
   @ResponseMessage('Đổi access token mới')
-  async refreshToken(
-    @Req() request: Request,
-    @Res({ passthrough: true }) response: Response,
-  ) {
+  async refreshToken(@Req() request: Request, @Res({ passthrough: true }) response: Response) {
     const refreshToken = request.cookies['refresh_token'];
     return await this.authService.processNewToken(refreshToken, response);
   }

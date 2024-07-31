@@ -1,8 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import * as bcrypt from 'bcrypt';
@@ -34,7 +30,7 @@ export class UsersService {
     return await this.userModel.create({
       ...createUserDto,
       password: hashPassword,
-      role,
+      role: role?._id,
     });
   }
 
@@ -99,8 +95,7 @@ export class UsersService {
   }
 
   async remove(user: IUser, _id: string) {
-    if (!isMongoId(_id))
-      throw new BadRequestException('ID của người dùng phải là kiểu MongoId');
+    if (!isMongoId(_id)) throw new BadRequestException('ID của người dùng phải là kiểu MongoId');
 
     await this.userModel.updateOne(
       { _id },

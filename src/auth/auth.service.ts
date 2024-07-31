@@ -20,10 +20,7 @@ export class AuthService {
     const user = await this.usersService.findUserByEmail(username);
 
     if (user) {
-      const isValidPassword = this.usersService.isValidPassword(
-        password,
-        user.password,
-      );
+      const isValidPassword = await this.usersService.isValidPassword(password, user.password);
       if (isValidPassword) return user;
     }
 
@@ -32,6 +29,7 @@ export class AuthService {
 
   async signUp(registerUserDto: RegisterUserDto) {
     const user = await this.usersService.create(registerUserDto);
+    console.log(user);
     return {
       fullname: user.fullname,
       role: user.role,
@@ -74,8 +72,7 @@ export class AuthService {
   createRefreshToken(payload: any): string {
     return this.jwtService.sign(payload, {
       secret: this.configService.get<string>('JWT_REFRESH_TOKEN_SECRET'),
-      expiresIn:
-        ms(this.configService.get<string>('JWT_REFRESH_EXPIRE')) / 1000,
+      expiresIn: ms(this.configService.get<string>('JWT_REFRESH_EXPIRE')) / 1000,
     });
   }
 

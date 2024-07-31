@@ -1,15 +1,13 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument } from 'mongoose';
+import { Product } from 'src/models/products/schemas/product.schema';
 
 export type VariantDocument = HydratedDocument<Variant>;
 
 @Schema({ timestamps: true })
 export class Variant {
-  @Prop({
-    type: mongoose.Schema.Types.ObjectId,
-    required: true,
-  })
-  product: mongoose.Schema.Types.ObjectId;
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Product.name, required: true })
+  product: Product;
 
   @Prop({ type: String, unique: true, required: true })
   sku: string;

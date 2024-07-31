@@ -1,7 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { ApiProperty } from '@nestjs/swagger';
 import mongoose, { HydratedDocument } from 'mongoose';
-import { softDeletePlugin } from 'soft-delete-plugin-mongoose';
 import { Role } from 'src/models/roles/schemas/role.schema';
 
 export type UserDocument = HydratedDocument<User>;
@@ -18,19 +16,13 @@ export class User {
   fullname: string;
 
   @Prop()
-  age: number;
-
-  @Prop()
   address: string;
-
-  @Prop()
-  gender: string;
 
   @Prop()
   refresh_token: string;
 
-  @Prop({ ref: Role.name })
-  role: mongoose.Schema.Types.ObjectId;
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Role.name })
+  role: Role;
 
   @Prop({ type: Object })
   createdBy: {

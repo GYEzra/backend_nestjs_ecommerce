@@ -8,5 +8,6 @@ import { Promotion, PromotionSchema } from './schemas/promotion.schema';
   imports: [MongooseModule.forFeature([{ name: Promotion.name, schema: PromotionSchema }])],
   controllers: [PromotionsController],
   providers: [PromotionsService],
+  exports: [PromotionsService],
 })
 export class PromotionsModule {}

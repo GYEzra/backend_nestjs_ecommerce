@@ -31,8 +31,7 @@ export class CreateUserDto {
       minUppercase: 1,
     },
     {
-      message:
-        'Mật khẩu tối thiểu 8 ký tự và bao gồm các ký tự in hoa, số và 1 ký tự đặc biệt',
+      message: 'Mật khẩu tối thiểu 8 ký tự và bao gồm các ký tự in hoa, số và 1 ký tự đặc biệt',
     },
   )
   password: string;
@@ -42,21 +41,14 @@ export class CreateUserDto {
   fullname: string;
 
   @IsOptional()
-  @IsNumber(
-    { maxDecimalPlaces: 0, allowInfinity: false },
-    { message: 'Tuổi phải là kiểu số nguyên' },
-  )
-  age: number;
-
-  @IsOptional()
   @IsString({ message: 'Địa chỉ phải là kiểu String' })
   address: string;
 
   @IsOptional()
-  @IsEnum(GenderType, { message: 'Giới tính phải là kiểu Nam hoặc Nữ' })
-  gender: GenderType;
-
-  @IsOptional()
   @IsMongoId({ message: 'Role phải là kiểu MongoId' })
   role: string;
+
+  @IsOptional()
+  @IsMongoId({ message: 'Cart phải là kiểu MongoId' })
+  cart: string;
 }

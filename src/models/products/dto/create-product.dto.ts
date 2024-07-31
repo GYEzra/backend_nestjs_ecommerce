@@ -8,7 +8,6 @@ import {
   IsString,
 } from 'class-validator';
 import mongoose from 'mongoose';
-import { GenderType } from 'src/common/enums/enums';
 
 export class CreateProductDto {
   @IsNotEmpty({ message: 'Tên sản phẩm không được trống' })
@@ -27,21 +26,12 @@ export class CreateProductDto {
   images: string[];
 
   @IsOptional()
-  @IsArray({ message: 'Các biến thể phải là kiểu Array' })
-  @IsMongoId({ each: true, message: 'Biến thể phải là kiểu MongoId' })
-  variants: mongoose.Schema.Types.ObjectId[];
-
-  @IsOptional()
-  @IsMongoId({ message: 'ID danh mục phải là kiểu MongoId' })
+  @IsMongoId({ message: 'Category danh mục phải là kiểu MongoId' })
   category: mongoose.Schema.Types.ObjectId;
 
   @IsOptional()
   @IsString({ message: 'Mô tả phải là kiểu String' })
   description: string;
-
-  @IsOptional()
-  @IsEnum(GenderType, { message: 'Giới tính phải là kiểu Nam/Nữ/Unisex' })
-  gender: string;
 
   @IsOptional()
   @IsString({ message: 'Chất liệu phải là kiểu String' })

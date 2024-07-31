@@ -5,7 +5,6 @@ import { TransformInterceptor } from './common/interceptors/transform.intercepto
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import * as cookieParser from 'cookie-parser';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { useContainer } from 'class-validator';
 import { AllExceptionsFilter } from './core/filters/all_exception.filter';
 
 async function bootstrap() {
@@ -22,6 +21,8 @@ async function bootstrap() {
   app.useGlobalInterceptors(new TransformInterceptor(reflector));
   app.useGlobalGuards(new JwtAuthGuard(reflector));
   app.use(cookieParser());
+
+  app.enableCors();
 
   const httpAdapter = app.get(HttpAdapterHost);
   app.useGlobalFilters(new AllExceptionsFilter(httpAdapter));
