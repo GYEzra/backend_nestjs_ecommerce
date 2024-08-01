@@ -16,6 +16,9 @@ import { PromotionsModule } from './models/promotions/promotions.module';
 import { CartsModule } from './models/carts/carts.module';
 import { OrdersModule } from './models/orders/orders.module';
 import { AddressesModule } from './models/addresses/addresses.module';
+import { FilesModule } from './models/files/files.module';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
 
 const modelModule = [
   AuthModule,
@@ -30,6 +33,7 @@ const modelModule = [
   AddressesModule,
   OrdersModule,
   CartsModule,
+  FilesModule,
 ];
 
 @Module({
@@ -37,6 +41,12 @@ const modelModule = [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60000,
+        limit: 20,
+      },
+    ]),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
@@ -51,6 +61,12 @@ const modelModule = [
     ...modelModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
+  ],
 })
 export class AppModule {}
