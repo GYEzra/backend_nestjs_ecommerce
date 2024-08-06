@@ -1,17 +1,16 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
-import { CartItem } from '../carts/schemas/cart-item.schema';
-import { OrderSummary } from 'src/common/interfaces/order-summary.interface';
 import { Order, OrderDocument } from './schemas/order.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { SoftDeleteModel } from 'soft-delete-plugin-mongoose';
 import { PromotionsService } from '../promotions/promotions.service';
-import { Promotion } from '../promotions/schemas/promotion.schema';
 import { AddressesService } from '../addresses/addresses.service';
-import { Address } from '../addresses/schemas/address.schema';
 import aqp from 'api-query-params';
 import { IUser } from 'src/common/interfaces/user.interface';
+import { CartsService } from '../carts/carts.service';
+import { OrderStatus } from 'src/common/enums/status.enum';
+import { PaymentStatus } from 'src/common/enums/enums';
 
 @Injectable()
 export class OrdersService {
@@ -19,13 +18,33 @@ export class OrdersService {
     @InjectModel(Order.name) private orderModel: SoftDeleteModel<OrderDocument>,
     private readonly promotionsService: PromotionsService,
     private readonly addressesService: AddressesService,
+    private readonly cartService: CartsService,
   ) {}
 
-  async create(createOrderDto: CreateOrderDto, userId: string) {
-    return await this.orderModel.create({
-      user: userId,
-      ...createOrderDto,
+  async create(createOrderDto: CreateOrderDto, user: IUser) {
+    const { cartId, payment_method, note } = createOrderDto;
+
+    const cart = await this.cartService.findOne(cartId);
+
+    if (!cart) throw new NotFoundException('Giỏ hàng không tồn tại');
+
+    const orderData = this.calculateOrderData(cart);
+
+    const newOrder = await this.orderModel.create({
+      ...orderData,
+      user: cart.user,
+      payment_method,
+      payment_status: PaymentStatus.Pending,
+      note,
+      createdBy: {
+        _id: user._id,
+        email: user.email,
+      },
     });
+
+    await this.cartService.remove(cartId);
+
+    return newOrder;
   }
 
   async findAll(query: string) {
@@ -51,8 +70,8 @@ export class OrdersService {
 
     return {
       meta: {
-        current: current,
-        pageSize: pageSize,
+        current,
+        pageSize,
         pages: totalPages,
         total: totalItems,
       },
@@ -65,18 +84,16 @@ export class OrdersService {
   }
 
   async update(id: string, updateOrderDto: UpdateOrderDto, user: IUser) {
-    return await this.orderModel
-      .updateOne(
-        { _id: id },
-        {
-          ...updateOrderDto,
-          updatedBy: {
-            _id: user._id,
-            email: user.email,
-          },
+    return await this.orderModel.updateOne(
+      { _id: id },
+      {
+        ...updateOrderDto,
+        updatedBy: {
+          _id: user._id,
+          email: user.email,
         },
-      )
-      .exec();
+      },
+    );
   }
 
   async remove(id: string, user: IUser) {
@@ -94,46 +111,35 @@ export class OrdersService {
     return await this.orderModel.softDelete({ _id: id });
   }
 
-  getOrderSummary(cartItems: CartItem[], promotion?: Promotion, address?: Address): OrderSummary {
-    const totalAmount = this.calculateTotalAmount(cartItems);
-
-    const taxes = totalAmount * 0.15;
-
-    const couponDiscount = promotion
-      ? this.promotionsService.calculateDiscountAmount(totalAmount, promotion)
-      : 0;
-
-    const shippingCost = address
-      ? this.addressesService.calculateShippingCost(address.province)
-      : 0;
-
-    const subTotal = totalAmount;
-
-    const total = subTotal + taxes + shippingCost - couponDiscount;
+  private calculateOrderData(cart: any) {
+    const taxRate = 10 / 100;
+    const subTotal = this.calculateTotalAmount(cart.items);
+    const shippingCost = this.addressesService.calculateShippingCost(
+      cart.shipping_address.province,
+    );
+    const discountAmount = this.promotionsService.calculateDiscountAmount(subTotal, cart.promotion);
+    const taxAmount = subTotal * taxRate;
+    const totalAmount = subTotal + taxAmount + shippingCost - discountAmount;
 
     return {
-      itemCount: cartItems.length,
-      taxes,
-      couponDiscount,
-      shippingCost,
-      subTotal,
-      total,
+      items: cart.items,
+      customer_full_name: cart.shipping_address.fullName,
+      customer_phone_number: cart.shipping_address.phoneNumber,
+      order_status: OrderStatus.Pending,
+      counpon: cart.promotion?.coupon,
+      discount_amount: cart.promotion?.discount_amount,
+      shipping_address: cart.shipping_address.streetAddress + ', ' + cart.shipping_address.province,
+      shipping_cost: shippingCost,
+      tax_amount: taxAmount,
+      total_amount: totalAmount,
     };
   }
 
-  private calculateTotalAmount(cartItems: CartItem[]): number {
-    if (!cartItems || cartItems.length === 0) {
+  private calculateTotalAmount(items: any[]): number {
+    if (!items || items.length === 0) {
       return 0;
     }
 
-    const totalAmount = cartItems.reduce((total, cartItem) => {
-      const { quantity, variant } = cartItem;
-      const { product } = variant;
-      const itemPrice = product.price;
-
-      return total + quantity * itemPrice;
-    }, 0);
-
-    return totalAmount;
+    return items.reduce((total, item) => total + item.price * item.quantity, 0);
   }
 }

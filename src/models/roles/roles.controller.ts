@@ -6,7 +6,9 @@ import { IUser } from 'src/common/interfaces/user.interface';
 import { User } from 'src/common/decorators/user.decorator';
 import { ResponseMessage } from 'src/common/decorators/response.decorator';
 import { ValidateObjectIdPipe } from 'src/common/pipes/validate_object_id.pipe';
+import { ApiParam, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('roles')
 @Controller('roles')
 export class RolesController {
   constructor(private readonly rolesService: RolesService) {}
@@ -17,6 +19,14 @@ export class RolesController {
     return this.rolesService.create(createRoleDto, user);
   }
 
+  @ApiParam({
+    name: 'qs',
+    required: false,
+    type: String,
+    example: 'current=1&pageSize=2&populate=permissions&fields=module&method=GET&sort=createdAt',
+    description:
+      'Build query string để thực hiện phân trang, tìm kiếm, sắp xếp, lấy thêm dữ liệu từ Related documents',
+  })
   @ResponseMessage('Lấy danh sách vai trò với phân trang')
   @Get()
   findAll(@Query() queryString: string) {

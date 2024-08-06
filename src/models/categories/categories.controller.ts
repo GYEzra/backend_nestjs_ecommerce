@@ -7,7 +7,9 @@ import { IUser } from 'src/common/interfaces/user.interface';
 import { ResponseMessage } from 'src/common/decorators/response.decorator';
 import { Public } from 'src/auth/auth.decorator';
 import { ValidateObjectIdPipe } from 'src/common/pipes/validate_object_id.pipe';
+import { ApiParam, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('categories')
 @Controller('categories')
 export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) {}
@@ -19,6 +21,13 @@ export class CategoriesController {
   }
 
   @Public()
+  @ApiParam({
+    name: 'qs',
+    required: false,
+    type: String,
+    example: 'current=1&pageSize=2&name=Quần&sort=createdAt',
+    description: 'Build query string để thực hiện phân trang, tìm kiếm, sắp xếp',
+  })
   @ResponseMessage('Lấy danh sách danh mục')
   @Get()
   async findAll() {

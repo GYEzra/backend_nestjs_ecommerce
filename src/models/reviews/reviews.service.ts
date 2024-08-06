@@ -99,7 +99,7 @@ export class ReviewsService {
       throw new BadRequestException(CUSTOM_MESSAGES.ERROR_MONGO_ID);
     }
     const reviews = await this.reviewModel.find().exec();
-    const sum = reviews.reduce((accumulator, review) => accumulator + review.rating, 0);
+    const sum = reviews.reduce((accumulator, review) => accumulator + review.score, 0);
     return sum / reviews.length;
   }
 }

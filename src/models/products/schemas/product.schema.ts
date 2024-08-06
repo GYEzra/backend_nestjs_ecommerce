@@ -12,6 +12,15 @@ export class Product {
   @Prop({ required: true })
   price: number;
 
+  @Prop({ required: true })
+  stock: number;
+
+  @Prop({ type: [String], required: true, default: [] })
+  colors: string[];
+
+  @Prop({ type: [String], required: true, default: [] })
+  sizes: string[];
+
   @Prop([String])
   images: string[];
 

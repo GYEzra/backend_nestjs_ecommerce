@@ -86,30 +86,23 @@ export class PromotionsService {
     return await this.promotionModel.softDelete({ _id });
   }
 
-  // async applyCoupon(
-  //   cartWithOrderSummary: CartWithOrderSummary,
-  //   coupon: string,
-  // ): Promise<CartWithOrderSummary> {
-  //   const promotion = await this.promotionModel.findOne({ coupon });
-  //   if (!promotion || !this.isValidPromotion(cartWithOrderSummary.orderSummary.total, promotion)) {
-  //     throw new BadRequestException('Mã khuyến mãi không hợp lệ hoặc không tồn tại');
-  //   }
+  async checkPromotion(code: string, totalAmount: number) {
+    const promotion = await this.promotionModel.findOne({ coupon: code });
 
-  //   const discountAmount = this.calculateDiscountAmount(
-  //     cartWithOrderSummary.orderSummary.total,
-  //     promotion,
-  //   );
-
-  //   return {
-  //     ...cartWithOrderSummary,
-  //     promotion,
-  //     orderSummary: {
-  //       ...cartWithOrderSummary.orderSummary,
-  //       couponDiscount: discountAmount,
-  //       total: cartWithOrderSummary.orderSummary.total - discountAmount,
-  //     },
-  //   };
-  // }
+    if (promotion) {
+      if (this.isValidPromotion(totalAmount, promotion)) {
+        const discountAmount = this.calculateDiscountAmount(totalAmount, promotion);
+        return {
+          code,
+          discountAmount,
+        };
+      } else {
+        throw new BadRequestException('Mã giảm giá không hợp lệ');
+      }
+    } else {
+      throw new BadRequestException('Mã giảm giá không tồn tại');
+    }
+  }
 
   private isValidPromotion(totalAmount: number, promotion: Promotion): boolean {
     const now = new Date();

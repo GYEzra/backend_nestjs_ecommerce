@@ -44,11 +44,3 @@ export enum ShippingMethod {
   Express = 'Giao hàng nhanh',
   SameDay = 'Giao hàng hỏa tốc',
 }
-
-export enum OrderStatus {
-  Pending = 'Chờ xử ký',
-  Processing = 'Đang xử lý',
-  Shipped = 'Đã giao hàng',
-  Delivered = 'Giao hàng thành công',
-  Cancelled = 'Đã hủy',
-}

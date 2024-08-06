@@ -37,7 +37,7 @@ export class PermissionsService {
   }
 
   async findAll(query: string) {
-    const { filter, sort, population } = aqp(query);
+    const { filter, sort, population, projection } = aqp(query);
     const current = +filter.current;
     const pageSize = +filter.pageSize;
     delete filter.current;
@@ -53,7 +53,6 @@ export class PermissionsService {
 
     const result = await this.permissionModel
       .find(filter)
-      .select('-password')
       .skip(offset)
       .limit(limit)
       .sort(defaultSort)
@@ -74,9 +73,9 @@ export class PermissionsService {
     return await this.permissionModel.findById(_id);
   }
 
-  async update(updatePermissionDto: UpdatePermissionDto, user: IUser) {
+  async update(id: string, updatePermissionDto: UpdatePermissionDto, user: IUser) {
     return await this.permissionModel.updateOne(
-      { _id: updatePermissionDto._id },
+      { _id: id },
       {
         ...updatePermissionDto,
         updatedBy: {

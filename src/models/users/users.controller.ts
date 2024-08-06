@@ -4,35 +4,54 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from 'src/common/decorators/user.decorator';
 import { IUser } from 'src/common/interfaces/user.interface';
-import { Public } from 'src/auth/auth.decorator';
+import { ApiParam, ApiTags } from '@nestjs/swagger';
+import { ValidateObjectIdPipe } from 'src/common/pipes/validate_object_id.pipe';
+import { ResponseMessage } from 'src/common/decorators/response.decorator';
 
+@ApiTags('users')
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
+  @ResponseMessage('Tạo mới người dùng')
   async create(@Body() createUserDto: CreateUserDto) {
     return await this.usersService.create(createUserDto);
   }
 
-  @Public()
+  @ApiParam({
+    name: 'qs',
+    required: false,
+    type: String,
+    example: 'current=1&pageSize=2&populate=role&fields=-fullname&fullname=Khánh&sort=createdAt',
+    description:
+      'Build query string để thực hiện phân trang, tìm kiếm, sắp xếp, lấy thêm dữ liệu từ Related documents',
+  })
   @Get()
+  @ResponseMessage('Lấy danh sách người dùng')
   async findAll(@Query() query: string) {
     return await this.usersService.findAll(query);
   }
 
   @Get(':id')
+  @ResponseMessage('Lấy thông tin người dùng')
   findOne(@Param('id') id: string) {
     return this.usersService.findOne(id);
   }
 
-  @Patch()
-  async update(@User() user: IUser, @Body() updateUserDto: UpdateUserDto) {
-    return await this.usersService.update(user, updateUserDto);
+  @Patch(':id')
+  @ResponseMessage('Cập nhật thông tin người dùng')
+  async update(
+    @Param('id', ValidateObjectIdPipe) id: string,
+    @User() user: IUser,
+    @Body() updateUserDto: UpdateUserDto,
+  ) {
+    return await this.usersService.update(id, updateUserDto, user);
   }
 
   @Delete(':id')
-  remove(@User() user: IUser, @Param('id') id: string) {
+  @ResponseMessage('Xóa người dùng')
+  remove(@Param('id', ValidateObjectIdPipe) id: string, @User() user: IUser) {
     return this.usersService.remove(user, id);
   }
 }

@@ -22,7 +22,7 @@ export class Review {
   user: mongoose.Schema.Types.ObjectId;
 
   @Prop({ type: Number, required: true, min: 1, max: 5 })
-  rating: number;
+  score: number;
 
   @Prop()
   comment: String;

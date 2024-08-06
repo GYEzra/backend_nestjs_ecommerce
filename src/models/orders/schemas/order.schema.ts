@@ -1,8 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument } from 'mongoose';
-import { Address } from 'src/models/addresses/schemas/address.schema';
 import { CartItem } from 'src/models/carts/schemas/cart-item.schema';
-import { Promotion } from 'src/models/promotions/schemas/promotion.schema';
+import { Product } from 'src/models/products/schemas/product.schema';
 import { User } from 'src/models/users/schemas/user.schema';
 
 export type OrderDocument = HydratedDocument<Order>;
@@ -12,32 +11,44 @@ export class Order {
   @Prop({ type: mongoose.Schema.Types.ObjectId, required: true, ref: User.name })
   user: User;
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, required: true, ref: CartItem.name })
+  @Prop({ type: [CartItem], required: true })
   items: CartItem[];
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Promotion.name })
-  promotion: Promotion;
+  @Prop({ required: true })
+  customer_full_name: string;
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Address.name })
-  shipping_address: Address;
-
-  @Prop()
-  shipping_method: string;
-
-  @Prop()
-  shipping_cost: number;
-
-  @Prop()
-  payment_method: string;
-
-  @Prop()
-  payment_status: string;
-
-  @Prop()
-  shipping_note: string;
+  @Prop({ required: true })
+  customer_phone_number: string;
 
   @Prop({ required: true })
   order_status: string;
+
+  @Prop({ required: true })
+  payment_method: string;
+
+  @Prop({ required: true })
+  payment_status: string;
+
+  @Prop({ default: null })
+  counpon: string;
+
+  @Prop({ default: 0 })
+  discount_amount: number;
+
+  @Prop({ required: true })
+  shipping_address: string;
+
+  @Prop({ required: true })
+  shipping_cost: number;
+
+  @Prop({ required: true })
+  tax_amount: number;
+
+  @Prop({ required: true })
+  total_amount: number;
+
+  @Prop({ default: null })
+  note: string;
 
   @Prop({ type: Object })
   createdBy: {

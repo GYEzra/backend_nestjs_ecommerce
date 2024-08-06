@@ -6,7 +6,9 @@ import { IUser } from 'src/common/interfaces/user.interface';
 import { User } from 'src/common/decorators/user.decorator';
 import { ValidateObjectIdPipe } from 'src/common/pipes/validate_object_id.pipe';
 import { ResponseMessage } from 'src/common/decorators/response.decorator';
+import { ApiTags, ApiParam } from '@nestjs/swagger';
 
+@ApiTags('reviews')
 @Controller('reviews')
 export class ReviewsController {
   constructor(private readonly reviewsService: ReviewsService) {}
@@ -17,6 +19,14 @@ export class ReviewsController {
     return await this.reviewsService.create(createReviewDto, user);
   }
 
+  @ApiParam({
+    name: 'qs',
+    required: false,
+    type: String,
+    example: 'current=1&pageSize=2&populate=user,product&score=2&sort=updatedAt',
+    description:
+      'Build query string để thực hiện phân trang, tìm kiếm, sắp xếp, lấy thêm dữ liệu từ Related documents',
+  })
   @ResponseMessage('Lấy danh sách đánh giá')
   @Get()
   async findAll(@Query() query: string) {

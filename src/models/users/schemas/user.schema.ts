@@ -21,7 +21,7 @@ export class User {
   @Prop()
   refresh_token: string;
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Role.name })
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Role.name, required: true })
   role: Role;
 
   @Prop({ type: Object })

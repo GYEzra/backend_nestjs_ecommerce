@@ -81,9 +81,9 @@ export class UsersService {
     return await this.userModel.findOne({ refresh_token: refreshToken });
   }
 
-  async update(user: IUser, updateUserDto: UpdateUserDto) {
+  async update(id: string, updateUserDto: UpdateUserDto, user: IUser) {
     return await this.userModel.updateOne(
-      { _id: updateUserDto._id },
+      { _id: id },
       {
         ...updateUserDto,
         updatedBy: {

@@ -1,21 +1,19 @@
 import { Controller, Post, Body, UseGuards, Res, Get, Req } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterUserDto } from 'src/models/users/dto/register-user.dto';
-import { UsersService } from 'src/models/users/users.service';
 import { ResponseMessage } from 'src/common/decorators/response.decorator';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { Public } from './auth.decorator';
 import { Request, Response } from 'express';
 import { User } from 'src/common/decorators/user.decorator';
 import { IUser } from 'src/common/interfaces/user.interface';
-import { use } from 'passport';
+import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
+import { LoginUserDto } from 'src/models/users/dto/login-user.dto';
 
+@ApiTags('authencation')
 @Controller()
 export class AuthController {
-  constructor(
-    private readonly authService: AuthService,
-    private readonly usersService: UsersService,
-  ) {}
+  constructor(private readonly authService: AuthService) {}
 
   @Public()
   @Post('signup')
@@ -25,6 +23,8 @@ export class AuthController {
     return await this.authService.signUp(registerUserDto);
   }
 
+  @ApiBearerAuth('JWT-auth')
+  @ApiBody({ type: LoginUserDto })
   @Public()
   @Post('login')
   @UseGuards(LocalAuthGuard)

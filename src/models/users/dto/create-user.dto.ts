@@ -13,13 +13,21 @@ import { GenderType } from 'src/common/enums/enums';
 
 export class CreateUserDto {
   @ApiProperty({
+    type: String,
     example: 'example@gmail.com',
-    description: 'Nhập email của bạn',
+    description: 'Email của người dùng',
+    required: true,
   })
   @IsEmail({}, { message: 'Vui lòng nhập đúng định email' })
   @IsNotEmpty({ message: 'Email không được bỏ trống' })
   email: string;
 
+  @ApiProperty({
+    type: String,
+    example: 'Example123@',
+    description: 'Mật khẩu của người dùng',
+    required: true,
+  })
   @IsNotEmpty({ message: 'Mật khẩu không được bỏ trống' })
   @IsString({ message: 'Mật khẩu phải là kiểu String' })
   @IsStrongPassword(
@@ -36,19 +44,32 @@ export class CreateUserDto {
   )
   password: string;
 
+  @ApiProperty({
+    type: String,
+    example: 'Nguyễn Văn A',
+    description: 'Tên của người dùng',
+    required: true,
+  })
   @IsNotEmpty({ message: 'Tên người dùng không được bỏ trống' })
   @IsString({ message: 'Tên người dùng phải là kiểu String' })
   fullname: string;
 
-  @IsOptional()
-  @IsString({ message: 'Địa chỉ phải là kiểu String' })
-  address: string;
-
-  @IsOptional()
+  @ApiProperty({
+    type: String,
+    example: '66acad58fc32612044cf6d0d',
+    description: 'ID của vai trò',
+    required: true,
+  })
   @IsMongoId({ message: 'Role phải là kiểu MongoId' })
   role: string;
 
+  @ApiProperty({
+    type: String,
+    example: 'Sư Vạn Hạnh, Q.10, TPHCM',
+    description: 'Địa chỉ của người dùng',
+    required: false,
+  })
   @IsOptional()
-  @IsMongoId({ message: 'Cart phải là kiểu MongoId' })
-  cart: string;
+  @IsString({ message: 'Địa chỉ phải là kiểu String' })
+  address?: string;
 }

@@ -1,5 +1,4 @@
-import { PartialType } from '@nestjs/mapped-types';
+import { PartialType } from '@nestjs/swagger';
 import { CreateCategoryDto } from './create-category.dto';
-import { IsMongoId, IsNotEmpty } from 'class-validator';
 
 export class UpdateCategoryDto extends PartialType(CreateCategoryDto) {}

@@ -12,12 +12,19 @@ export class AddressesService {
     private addressModel: SoftDeleteModel<AddressDocument>,
   ) {}
 
-  async create(createShippingAddressDto: CreateAddressDto) {
-    return await this.addressModel.create(createShippingAddressDto);
+  async create(createShippingAddressDto: CreateAddressDto, userId: string) {
+    return await this.addressModel.create({
+      ...createShippingAddressDto,
+      user: userId,
+    });
   }
 
   async findAllByUser(userId: string) {
     return await this.addressModel.find({ user: userId });
+  }
+
+  async findOne(_id: string) {
+    return await this.addressModel.findById(_id);
   }
 
   async update(_id: string, updateShippingAddressDto: UpdateAddressDto) {

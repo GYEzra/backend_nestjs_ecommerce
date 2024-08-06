@@ -10,7 +10,6 @@ import { PermissionsModule } from './models/permissions/permissions.module';
 import { softDeletePlugin } from 'soft-delete-plugin-mongoose';
 import { CategoriesModule } from './models/categories/categories.module';
 import { ProductsModule } from './models/products/products.module';
-import { VariantsModule } from './models/variants/variants.module';
 import { ReviewsModule } from './models/reviews/reviews.module';
 import { PromotionsModule } from './models/promotions/promotions.module';
 import { CartsModule } from './models/carts/carts.module';
@@ -27,7 +26,6 @@ const modelModule = [
   PermissionsModule,
   CategoriesModule,
   ProductsModule,
-  VariantsModule,
   ReviewsModule,
   PromotionsModule,
   AddressesModule,
@@ -59,6 +57,7 @@ const modelModule = [
       inject: [ConfigService],
     }),
     ...modelModule,
+    CartsModule,
   ],
   controllers: [AppController],
   providers: [
