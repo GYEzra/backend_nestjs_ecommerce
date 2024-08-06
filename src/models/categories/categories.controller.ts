@@ -28,14 +28,16 @@ export class CategoriesController {
     example: 'current=1&pageSize=2&name=Quần&sort=createdAt',
     description: 'Build query string để thực hiện phân trang, tìm kiếm, sắp xếp',
   })
-  @ResponseMessage('Lấy danh sách danh mục')
   @Get()
+  @Public()
+  @ResponseMessage('Lấy danh sách danh mục')
   async findAll() {
     return await this.categoriesService.findAll();
   }
 
-  @ResponseMessage('Lấy thông tin của danh mục')
   @Get(':id')
+  @Public()
+  @ResponseMessage('Lấy thông tin của danh mục')
   async findOne(@Param('id', ValidateObjectIdPipe) id: string) {
     return await this.categoriesService.findOne(id);
   }

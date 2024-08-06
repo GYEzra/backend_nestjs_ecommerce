@@ -7,6 +7,7 @@ import { IUser } from 'src/common/interfaces/user.interface';
 import { ValidateObjectIdPipe } from 'src/common/pipes/validate_object_id.pipe';
 import { ApiParam, ApiTags } from '@nestjs/swagger';
 import { ResponseMessage } from 'src/common/decorators/response.decorator';
+import { Public } from 'src/auth/auth.decorator';
 
 @ApiTags('coupons')
 @Controller('coupons')
@@ -27,12 +28,14 @@ export class PromotionsController {
     description: 'Build query string để thực hiện phân trang, tìm kiếm, sắp xếp',
   })
   @Get()
+  @Public()
   @ResponseMessage('Lấy danh sách mã giảm giá')
   async findAll(@Query() query: string) {
     return await this.promotionsService.findAll(query);
   }
 
   @Get(':id')
+  @Public()
   @ResponseMessage('Lấy thông tin mã giảm giá')
   async findOne(@Param('id', ValidateObjectIdPipe) _id: string) {
     return await this.promotionsService.findOne(_id);

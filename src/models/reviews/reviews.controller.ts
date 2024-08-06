@@ -7,6 +7,7 @@ import { User } from 'src/common/decorators/user.decorator';
 import { ValidateObjectIdPipe } from 'src/common/pipes/validate_object_id.pipe';
 import { ResponseMessage } from 'src/common/decorators/response.decorator';
 import { ApiTags, ApiParam } from '@nestjs/swagger';
+import { Public } from 'src/auth/auth.decorator';
 
 @ApiTags('reviews')
 @Controller('reviews')
@@ -27,8 +28,9 @@ export class ReviewsController {
     description:
       'Build query string để thực hiện phân trang, tìm kiếm, sắp xếp, lấy thêm dữ liệu từ Related documents',
   })
-  @ResponseMessage('Lấy danh sách đánh giá')
   @Get()
+  @Public()
+  @ResponseMessage('Lấy danh sách đánh giá')
   async findAll(@Query() query: string) {
     return await this.reviewsService.findAll(query);
   }

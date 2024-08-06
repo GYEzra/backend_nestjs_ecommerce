@@ -3,6 +3,87 @@ export const USER_ROLE = 'Người dùng';
 
 export const INIT_PERMISSIONS = [
   {
+    _id: '66b19f9e976a2992552002cf',
+    name: 'Đăng nhập',
+    apiPath: '/api/v1/auth/login',
+    method: 'POST',
+    module: 'AUTH',
+    createdBy: {
+      _id: '647b5108a8a243e8191855b5',
+      email: 'khanh@gmail.com',
+    },
+    isDeleted: false,
+    deletedAt: null,
+    createdAt: '2023-06-15T06:47:49.369Z',
+    updatedAt: '2023-06-15T06:54:05.131Z',
+    __v: 0,
+    updatedBy: {
+      _id: '647b5108a8a243e8191855b5',
+      email: 'khanh@gmail.com',
+    },
+  },
+  {
+    _id: '66b1a039e463b2594905bd94',
+    name: 'Đăng ký tài khoản',
+    apiPath: '/api/v1/auth/signup',
+    method: 'POST',
+    module: 'AUTH',
+    createdBy: {
+      _id: '647b5108a8a243e8191855b5',
+      email: 'khanh@gmail.com',
+    },
+    isDeleted: false,
+    deletedAt: null,
+    createdAt: '2023-06-15T06:47:49.369Z',
+    updatedAt: '2023-06-15T06:54:05.131Z',
+    __v: 0,
+    updatedBy: {
+      _id: '647b5108a8a243e8191855b5',
+      email: 'khanh@gmail.com',
+    },
+  },
+  {
+    _id: '66b1a082dceab9ffa83859b2',
+    name: 'Lấy thông tin người dùng bằng token',
+    apiPath: '/api/v1/auth/account',
+    method: 'GET',
+    module: 'AUTH',
+    createdBy: {
+      _id: '647b5108a8a243e8191855b5',
+      email: 'khanh@gmail.com',
+    },
+    isDeleted: false,
+    deletedAt: null,
+    createdAt: '2023-06-15T06:47:49.369Z',
+    updatedAt: '2023-06-15T06:54:05.131Z',
+    __v: 0,
+    updatedBy: {
+      _id: '647b5108a8a243e8191855b5',
+      email: 'khanh@gmail.com',
+    },
+  },
+  {
+    _id: '66b1a0f083f52957f939db71',
+    name: 'Đổi token mới',
+    apiPath: '/api/v1/auth/refresh',
+    method: 'GET',
+    module: 'AUTH',
+    createdBy: {
+      _id: '647b5108a8a243e8191855b5',
+      email: 'khanh@gmail.com',
+    },
+    isDeleted: false,
+    deletedAt: null,
+    createdAt: '2023-06-15T06:47:49.369Z',
+    updatedAt: '2023-06-15T06:54:05.131Z',
+    __v: 0,
+    updatedBy: {
+      _id: '647b5108a8a243e8191855b5',
+      email: 'khanh@gmail.com',
+    },
+  },
+
+  {
     _id: '648ab415f4328bd3153ee211',
     name: 'Lấy danh sách sản phẩm',
     apiPath: '/api/v1/products',

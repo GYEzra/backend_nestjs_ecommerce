@@ -1,8 +1,8 @@
-import { ExecutionContext, UnauthorizedException } from '@nestjs/common';
+import { ExecutionContext, ForbiddenException, UnauthorizedException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
+import { Request } from 'express';
 import { IS_PUBLIC_KEY } from '../auth.decorator';
-import { CUSTOM_MESSAGES } from 'src/common/enums/enums';
 
 export class JwtAuthGuard extends AuthGuard('jwt') {
   constructor(private reflector: Reflector) {
@@ -19,11 +19,24 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     return super.canActivate(context);
   }
 
-  handleRequest(err, user, info) {
-    // You can throw an exception based on either "info" or "err" arguments
+  handleRequest(err, user, info, context: ExecutionContext) {
+    const request: Request = context.switchToHttp().getRequest();
+
     if (err || !user) {
-      throw err || new UnauthorizedException(CUSTOM_MESSAGES.UNAUTHORIZED);
+      throw err || new UnauthorizedException('Token không hợp lệ');
     }
+
+    const targetMethod = request.method;
+    const targetEndpoint = request.route?.path as string;
+
+    const permissions = user.permissions ?? [];
+
+    const isExistPermission = permissions.find(
+      permission => permission.apiPath === targetEndpoint && permission.method === targetMethod,
+    );
+
+    if (!isExistPermission) throw new ForbiddenException('Bạn không có quyền truy cập vào API này');
+
     return user;
   }
 }

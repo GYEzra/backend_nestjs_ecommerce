@@ -68,10 +68,7 @@ export class RolesService {
   }
 
   async findOne(id: string) {
-    return (await this.roleModel.findOne({ _id: id }))?.populate({
-      path: 'permissions',
-      select: { _id: 1, apiPath: 1, name: 1, method: 1, module: 1 },
-    });
+    return await this.roleModel.findById(id).populate('permissions');
   }
 
   async update(_id: string, updateRoleDto: UpdateRoleDto, user: IUser) {

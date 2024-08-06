@@ -37,6 +37,7 @@ export class ProductsController {
   }
 
   @Get(':id')
+  @Public()
   @ResponseMessage('Lấy thông tin sản phẩm')
   async findOne(@Param('id', ValidateObjectIdPipe) _id: string) {
     return await this.productsService.findOne(_id);

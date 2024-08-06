@@ -8,10 +8,13 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtStrategy } from './passport/jwt.strategy';
 import * as ms from 'node_modules/ms';
+import { RolesService } from 'src/models/roles/roles.service';
+import { RolesModule } from 'src/models/roles/roles.module';
 
 @Module({
   imports: [
     UsersModule,
+    RolesModule,
     PassportModule.register({ session: true }),
     JwtModule.registerAsync({
       imports: [ConfigModule],

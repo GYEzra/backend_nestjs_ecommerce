@@ -3,9 +3,14 @@ import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt } from 'passport-jwt';
 import { Strategy } from 'passport-jwt';
+import { IUser } from 'src/common/interfaces/user.interface';
+import { RolesService } from 'src/models/roles/roles.service';
 
 export class JwtStrategy extends PassportStrategy(Strategy) {
-  constructor(@Inject(ConfigService) protected configService: ConfigService) {
+  constructor(
+    @Inject(ConfigService) protected configService: ConfigService,
+    private readonly rolesService: RolesService,
+  ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
@@ -13,7 +18,9 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(payload: any) {
-    return { ...payload };
+  async validate(payload: IUser) {
+    const role = (await this.rolesService.findOne(payload.role)).toObject();
+
+    return { ...payload, permissions: role.permissions };
   }
 }
