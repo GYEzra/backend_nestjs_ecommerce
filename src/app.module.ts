@@ -18,6 +18,7 @@ import { AddressesModule } from './models/addresses/addresses.module';
 import { FilesModule } from './models/files/files.module';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
+import { DatabaseModule } from './database/database.module';
 
 const modelModule = [
   AuthModule,
@@ -32,6 +33,8 @@ const modelModule = [
   OrdersModule,
   CartsModule,
   FilesModule,
+  CartsModule,
+  DatabaseModule,
 ];
 
 @Module({
@@ -57,7 +60,6 @@ const modelModule = [
       inject: [ConfigService],
     }),
     ...modelModule,
-    CartsModule,
   ],
   controllers: [AppController],
   providers: [
